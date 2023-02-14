@@ -1,5 +1,7 @@
 export type Role = 'user' | 'assistant'
 
+export type FetchFn = typeof fetch
+
 export type SendMessageOptions = {
   conversationId?: string
   parentMessageId?: string
@@ -18,6 +20,7 @@ export interface ChatMessage {
   role: Role
   parentMessageId?: string
   conversationId?: string
+  detail?: any
 }
 
 export class ChatGPTError extends Error {
