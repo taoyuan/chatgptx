@@ -25,6 +25,7 @@
     "node": ">=18"
   },
   "scripts": {
+    "prepublishOnly": "run-s test",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "del build",
