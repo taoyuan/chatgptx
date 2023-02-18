@@ -22,7 +22,7 @@
     "build"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=16"
   },
   "scripts": {
     "prepublishOnly": "run-s test",
