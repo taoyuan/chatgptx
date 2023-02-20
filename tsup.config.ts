@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 const baseConfig = {
-  entry: ['src/index.ts'],
+  entry: ['src/index.ts', 'src/cli.ts'],
   splitting: false,
   sourcemap: true,
   minify: false,

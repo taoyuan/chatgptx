@@ -1,31 +1,27 @@
 {
-  "name": "chatgptx",
-  "version": "4.4.2-1",
-  "description": "Node.js client (CommonJS and ESM) for the unofficial ChatGPT API.",
-  "author": "TaoYuan <towyuan@outlook.com>",
-  "repository": "taoyuan/chatgptx",
+  "name": "chatgpt",
+  "version": "4.4.1",
+  "description": "Node.js client for the unofficial ChatGPT API.",
+  "author": "Travis Fischer <travis@transitivebullsh.it>",
+  "repository": "transitive-bullshit/chatgpt-api",
   "license": "MIT",
   "type": "module",
   "source": "./src/index.ts",
-  "main": "./build/index.cjs",
   "types": "./build/index.d.ts",
-  "module": "./build/index.js",
   "exports": {
     ".": {
       "import": "./build/index.js",
       "types": "./build/index.d.ts",
-      "default": "./build/index.cjs",
-      "require": "./build/index.cjs"
+      "default": "./build/index.js"
     }
   },
   "files": [
     "build"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
-    "prepublishOnly": "run-s test",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "del build",
