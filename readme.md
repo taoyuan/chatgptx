@@ -39,7 +39,7 @@ We now provide three ways of accessing the unofficial ChatGPT API, all of which 
 | --------------------------- | ------ | -------- | ----------------- |
 | `ChatGPTAPI`                | ❌ No  | ✅ Yes   | ☑️ Mimics ChatGPT |
 | `ChatGPTUnofficialProxyAPI` | ✅ Yes | ☑️ Maybe | ✅ Real ChatGPT   |
-| `ChatGPAPIBrowser` (v3)     | ✅ Yes | ❌ No    | ✅ Real ChatGPT   |
+| `ChatGPTAPIBrowser` (v3)     | ✅ Yes | ❌ No    | ✅ Real ChatGPT   |
 
 **Note**: I recommend that you use either `ChatGPTAPI` or `ChatGPTUnofficialProxyAPI`.
 
@@ -184,7 +184,7 @@ const api = new ChatGPTAPI({
 })
 ```
 
-If you want to track the conversation, you'll need to pass the `parentMessageid` and `conversationid`:
+If you want to track the conversation, you'll need to pass the `parentMessageId` and `conversationId` like this:
 
 ```ts
 const api = new ChatGPTAPI({ apiKey: process.env.OPENAI_API_KEY })
@@ -307,7 +307,7 @@ Known reverse proxies run by community members include:
 
 | Reverse Proxy URL                                | Author                                       | Rate Limits      | Last Checked |
 | ------------------------------------------------ | -------------------------------------------- | ---------------- | ------------ |
-| `https://chat.duti.tech/api/conversation`        | [@acheong08](https://github.com/acheong08)   | 40 req/min by IP | 2/19/2023    |
+| `https://chat.duti.tech/api/conversation`        | [@acheong08](https://github.com/acheong08)   | 120 req/min by IP | 2/19/2023    |
 | `https://gpt.pawan.krd/backend-api/conversation` | [@PawanOsman](https://github.com/PawanOsman) | ?                | 2/19/2023    |
 
 Note: info on how the reverse proxies work is not being published at this time in order to prevent OpenAI from disabling access.
