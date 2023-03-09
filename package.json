@@ -1,6 +1,6 @@
 {
   "name": "chatgptx",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "Node.js client (CommonJS and ESM) for the unofficial ChatGPT API.",
   "author": "TaoYuan <towyuan@outlook.com>",
   "repository": "taoyuan/chatgptx",
