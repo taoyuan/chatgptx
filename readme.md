@@ -315,7 +315,7 @@ See [demos/demo-reverse-proxy](./demos/demo-reverse-proxy.ts) for a full example
 npx tsx demos/demo-reverse-proxy.ts
 ```
 
-`ChatGPTUnofficialProxyAPI` messages also contain a `conversationid` in addition to `parentMessageId`, since the ChatGPT webapp can't reference messages across
+`ChatGPTUnofficialProxyAPI` messages also contain a `conversationid` in addition to `parentMessageId`, since the ChatGPT webapp can't reference messages across different accounts & conversations.
 
 #### Reverse Proxy
 
@@ -332,7 +332,7 @@ Known reverse proxies run by community members include:
 
 | Reverse Proxy URL                                | Author                                       | Rate Limits       | Last Checked |
 | ------------------------------------------------ | -------------------------------------------- | ----------------- | ------------ |
-| `https://chat.duti.tech/api/conversation`        | [@acheong08](https://github.com/acheong08)   | 120 req/min by IP | 2/19/2023    |
+| `https://bypass.duti.tech/api/conversation`        | [@acheong08](https://github.com/acheong08)   | 5 req / 10 seconds by IP | 3/11/2023    |
 | `https://gpt.pawan.krd/backend-api/conversation` | [@PawanOsman](https://github.com/PawanOsman) | ?                 | 2/19/2023    |
 
 Note: info on how the reverse proxies work is not being published at this time in order to prevent OpenAI from disabling access.

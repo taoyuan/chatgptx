@@ -49,7 +49,7 @@ export class ChatGPTAPI {
   constructor(opts: types.ChatGPTAPIOptions) {
     const {
       apiKey,
-      apiBaseUrl = 'https://api.openai.com',
+      apiBaseUrl = 'https://api.openai.com/v1',
       debug = false,
       messageStore,
       completionParams,
@@ -170,7 +170,7 @@ export class ChatGPTAPI {
 
     const responseP = new Promise<types.ChatMessage>(
       async (resolve, reject) => {
-        const url = `${this._apiBaseUrl}/v1/chat/completions`
+        const url = `${this._apiBaseUrl}/chat/completions`
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this._apiKey}`
@@ -210,17 +210,15 @@ export class ChatGPTAPI {
 
                   if (response?.choices?.length) {
                     const delta = response.choices[0].delta
-                    if (delta?.content) {
-                      result.delta = delta.content
-                      result.text += delta.content
-                      result.detail = response
+                    result.delta = delta.content
+                    if (delta?.content) result.text += delta.content
+                    result.detail = response
 
-                      if (delta.role) {
-                        result.role = delta.role
-                      }
-
-                      onProgress?.(result)
+                    if (delta.role) {
+                      result.role = delta.role
                     }
+
+                    onProgress?.(result)
                   }
                 } catch (err) {
                   console.warn('OpenAI stream SEE event unexpected error', err)
@@ -333,15 +331,15 @@ export class ChatGPTAPI {
     }
 
     const systemMessageOffset = messages.length
-    let nextMessages = messages.concat([
-      {
-        ...{
-          role: 'user',
-          content: text,
-          name: opts.name
-        }
-      }
-    ])
+    let nextMessages = text
+      ? messages.concat([
+          {
+            role: 'user',
+            content: text,
+            name: opts.name
+          }
+        ])
+      : messages
     let numTokens = 0
 
     do {
@@ -349,13 +347,13 @@ export class ChatGPTAPI {
         .reduce((prompt, message) => {
           switch (message.role) {
             case 'system':
-              return [prompt, `Instructions:\n${message.content}`]
+              return prompt.concat([`Instructions:\n${message.content}`])
             case 'user':
-              return [prompt, `${userLabel}:\n${message.content}`]
+              return prompt.concat([`${userLabel}:\n${message.content}`])
             default:
-              return [prompt, `${assistantLabel}:\n${message.content}`]
+              return prompt.concat([`${assistantLabel}:\n${message.content}`])
           }
-        }, [])
+        }, [] as string[])
         .join('\n\n')
 
       const nextNumTokensEstimate = await this._getTokenCount(prompt)
@@ -385,11 +383,9 @@ export class ChatGPTAPI {
 
       nextMessages = nextMessages.slice(0, systemMessageOffset).concat([
         {
-          ...{
-            role: parentMessageRole,
-            content: parentMessage.text,
-            name: parentMessage.name
-          }
+          role: parentMessageRole,
+          content: parentMessage.text,
+          name: parentMessage.name
         },
         ...nextMessages.slice(systemMessageOffset)
       ])
