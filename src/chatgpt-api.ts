@@ -16,6 +16,7 @@ const ASSISTANT_LABEL_DEFAULT = 'ChatGPT'
 export class ChatGPTAPI {
   protected _apiKey: string
   protected _apiBaseUrl: string
+  protected _apiOrg?: string
   protected _debug: boolean
 
   protected _systemMessage: string
@@ -36,6 +37,7 @@ export class ChatGPTAPI {
    * Creates a new client wrapper around OpenAI's chat completion API, mimicing the official ChatGPT webapp's functionality as closely as possible.
    *
    * @param apiKey - OpenAI API key (required).
+   * @param apiOrg - Optional OpenAI API organization (optional).
    * @param apiBaseUrl - Optional override for the OpenAI API base URL.
    * @param debug - Optional enables logging debugging info to stdout.
    * @param completionParams - Param overrides to send to the [OpenAI chat completion API](https://platform.openai.com/docs/api-reference/chat/create). Options like `temperature` and `presence_penalty` can be tweaked to change the personality of the assistant.
@@ -49,6 +51,7 @@ export class ChatGPTAPI {
   constructor(opts: types.ChatGPTAPIOptions) {
     const {
       apiKey,
+      apiOrg,
       apiBaseUrl = 'https://api.openai.com/v1',
       debug = false,
       messageStore,
@@ -62,6 +65,7 @@ export class ChatGPTAPI {
     } = opts
 
     this._apiKey = apiKey
+    this._apiOrg = apiOrg
     this._apiBaseUrl = apiBaseUrl
     this._debug = !!debug
     this._fetch = fetch
@@ -120,6 +124,7 @@ export class ChatGPTAPI {
    *
    * @param message - The prompt message to send
    * @param opts.parentMessageId - Optional ID of the previous message in the conversation (defaults to `undefined`)
+   * @param opts.conversationId - Optional ID of the conversation (defaults to `undefined`)
    * @param opts.messageId - Optional ID of the message to send (defaults to a random UUID)
    * @param opts.systemMessage - Optional override for the chat "system message" which acts as instructions to the model (defaults to the ChatGPT system message)
    * @param opts.timeoutMs - Optional timeout in milliseconds (defaults to no timeout)
@@ -139,7 +144,8 @@ export class ChatGPTAPI {
       timeoutMs,
       onProgress,
       stream = onProgress ? true : false,
-      completionParams
+      completionParams,
+      conversationId
     } = opts
 
     let { abortSignal } = opts
@@ -153,10 +159,12 @@ export class ChatGPTAPI {
     const message: types.ChatMessage = {
       role: 'user',
       id: messageId,
+      conversationId,
       parentMessageId,
       text
     }
-    await this._upsertMessage(message)
+
+    const latestQuestion = message
 
     const { messages, maxTokens, numTokens } = await this._buildMessages(
       text,
@@ -166,6 +174,7 @@ export class ChatGPTAPI {
     const result: types.ChatMessage = {
       role: 'assistant',
       id: uuidv4(),
+      conversationId,
       parentMessageId: messageId,
       text: ''
     }
@@ -183,6 +192,12 @@ export class ChatGPTAPI {
           ...completionParams,
           messages,
           stream
+        }
+
+        // Support multiple organizations
+        // See https://platform.openai.com/docs/api-reference/authentication
+        if (this._apiOrg) {
+          headers['OpenAI-Organization'] = this._apiOrg
         }
 
         if (this._debug) {
@@ -211,16 +226,16 @@ export class ChatGPTAPI {
                     result.id = response.id
                   }
 
-                  if (response?.choices?.length) {
+                  if (response.choices?.length) {
                     const delta = response.choices[0].delta
                     result.delta = delta.content
                     if (delta?.content) result.text += delta.content
-                    result.detail = response
 
                     if (delta.role) {
                       result.role = delta.role
                     }
 
+                    result.detail = response
                     onProgress?.(result)
                   }
                 } catch (err) {
@@ -286,8 +301,27 @@ export class ChatGPTAPI {
           }
         }
       }
-    ).then((message) => {
-      return this._upsertMessage(message).then(() => message)
+    ).then(async (message) => {
+      if (message.detail && !message.detail.usage) {
+        try {
+          const promptTokens = numTokens
+          const completionTokens = await this._getTokenCount(message.text)
+          message.detail.usage = {
+            prompt_tokens: promptTokens,
+            completion_tokens: completionTokens,
+            total_tokens: promptTokens + completionTokens,
+            estimated: true
+          }
+        } catch (err) {
+          // TODO: this should really never happen, but if it does,
+          // we should handle notify the user gracefully
+        }
+      }
+
+      return Promise.all([
+        this._upsertMessage(latestQuestion),
+        this._upsertMessage(message)
+      ]).then(() => message)
     })
 
     if (timeoutMs) {
@@ -314,6 +348,14 @@ export class ChatGPTAPI {
 
   set apiKey(apiKey: string) {
     this._apiKey = apiKey
+  }
+
+  get apiOrg(): string {
+    return this._apiOrg
+  }
+
+  set apiOrg(apiOrg: string) {
+    this._apiOrg = apiOrg
   }
 
   protected async _buildMessages(text: string, opts: types.SendMessageOptions) {
