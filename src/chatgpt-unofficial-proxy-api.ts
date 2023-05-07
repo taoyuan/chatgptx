@@ -218,7 +218,10 @@ export class ChatGPTUnofficialProxyAPI {
                 }
               }
             } catch (err) {
-              reject(err)
+              if (this._debug) {
+                console.warn('chatgpt unexpected JSON error', err)
+              }
+              // reject(err)
             }
           },
           onError: (err) => {

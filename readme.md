@@ -376,7 +376,7 @@ Known reverse proxies run by community members include:
 
 | Reverse Proxy URL                                 | Author                                       | Rate Limits                  | Last Checked |
 | ------------------------------------------------- | -------------------------------------------- | ---------------------------- | ------------ |
-| `https://bypass.churchless.tech/api/conversation` | [@acheong08](https://github.com/acheong08)   | 5 req / 10 seconds by IP     | 3/24/2023    |
+| `https://ai.fakeopen.com/api/conversation` | [@pengzhile](https://github.com/pengzhile)   | 5 req / 10 seconds by IP     | 4/18/2023    |
 | `https://api.pawan.krd/backend-api/conversation`  | [@PawanOsman](https://github.com/PawanOsman) | 50 req / 15 seconds (~3 r/s) | 3/23/2023    |
 
 Note: info on how the reverse proxies work is not being published at this time in order to prevent OpenAI from disabling access.
@@ -491,6 +491,7 @@ All of these awesome projects are built using the `chatgpt` package. 🤯
 - [QQ Bot (oicq)](https://github.com/easydu2002/chat_gpt_oicq)
 - [QQ Bot (oicq + RabbitMQ)](https://github.com/linsyking/ChatGPT-QQBot)
 - [QQ Bot (go-cqhttp)](https://github.com/PairZhu/ChatGPT-QQRobot)
+- [QQ Bot (plugin for Yunzai-Bot + Bull)](https://github.com/Micuks/chatGPT-yunzai) (Lightweight, Google Bard support 💪)
 - [EXM smart contracts](https://github.com/decentldotland/molecule)
 - [Flutter ChatGPT API](https://github.com/coskuncay/flutter_chatgpt_api)
 - [Carik Bot](https://github.com/luridarmawan/Carik)
@@ -537,6 +538,7 @@ All of these awesome projects are built using the `chatgpt` package. 🤯
 - [Julius GPT](https://github.com/christophebe/julius-gpt) - Generate and publish your content from the CLI
 - [OpenAI-API-Service](https://github.com/Jarvan-via/api-service) - Provides OpenAI related APIs for businesses
 - [Discord Daily News Bot](https://github.com/ZirionNeft/chatgpt-discord-daily-news-bot) - Discord bot that generate funny daily news
+- [ai-assistant](https://github.com/chenweiyi/ai-assistant) - Create a chat website similar to ChatGPT
 
 If you create a cool integration, feel free to open a PR and add it to the list.
 
