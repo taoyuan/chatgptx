@@ -1,6 +1,6 @@
 {
   "name": "chatgptx",
-  "version": "5.2.4",
+  "version": "5.2.5",
   "description": "Node.js client (CommonJS and ESM) for the unofficial ChatGPT API.",
   "author": "TaoYuan <towyuan@outlook.com>",
   "repository": "taoyuan/chatgptx",
@@ -41,10 +41,10 @@
     "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check"
   },
   "dependencies": {
-    "@dqbd/tiktoken": "^1.0.7",
     "cac": "^6.7.14",
     "conf": "^11.0.1",
     "eventsource-parser": "^1.0.0",
+    "js-tiktoken": "^1.0.5",
     "keyv": "^4.5.2",
     "p-timeout": "^6.1.1",
     "quick-lru": "^6.1.1",
